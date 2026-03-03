@@ -32,6 +32,21 @@ LEAD_EMAIL_TO=hello@mahirtech.com
 RESEND_API_KEY=your_api_key
 ```
 
+
+## One-command 403 diagnosis (on the server)
+Run this inside your Ubuntu server:
+```bash
+bash scripts/check-403.sh mahirtech.cloud 3000
+```
+
+If it reports wrong vhost/default catch-all, apply the included config:
+```bash
+sudo cp deploy/nginx/mahirtech.cloud.conf /etc/nginx/sites-available/mahirtech.cloud
+sudo ln -sf /etc/nginx/sites-available/mahirtech.cloud /etc/nginx/sites-enabled/mahirtech.cloud
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t && sudo systemctl reload nginx
+```
+
 ## Deploy on Linux + Nginx
 1. Install Node.js 20+.
 2. In project directory:
