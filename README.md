@@ -58,3 +58,43 @@ RESEND_API_KEY=your_api_key
    }
    ```
 5. Add HTTPS using Certbot.
+
+### Troubleshooting: `403 Forbidden` from Nginx
+If `npm run build` and `pm2` are healthy but the browser still shows an Nginx `403 Forbidden`, Nginx is not proxying this domain to Next.js yet.
+
+Most common causes:
+- Domain points to the default Nginx server block instead of your app vhost.
+- `server_name` does not match the live domain (for example `mahirtech.cloud`).
+- A `root`-based static config is active without an `index` file, so Nginx returns 403.
+
+Quick checks on server:
+```bash
+sudo nginx -T | rg -n "server_name|listen|proxy_pass|root"
+curl -I http://127.0.0.1:3000
+curl -I http://YOUR_DOMAIN
+```
+
+A working vhost should include:
+```nginx
+server {
+  listen 80;
+  server_name mahirtech.cloud www.mahirtech.cloud;
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+  }
+}
+```
+
+Then run:
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+pm2 save
+```
