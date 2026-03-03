@@ -1,0 +1,16 @@
+diff --git a/.gitignore b/.gitignore
+index a0fb09a375ab75d9a4b2afc85a0153cb2cb03cd2..f104df98deeff6e5744bb8a829460702063ca095 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,8 @@
+ node_modules
+ .next
+-dist
+-.env
+-.env.local
++out
++.env*
++npm-debug.log*
++yarn-debug.log*
++yarn-error.log*
++pnpm-debug.log*
