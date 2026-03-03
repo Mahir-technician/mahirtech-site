@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:403": "bash scripts/check-403.sh",
+    "fix:403": "bash scripts/fix-403.sh"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",

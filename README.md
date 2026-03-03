@@ -39,6 +39,11 @@ Run this inside your Ubuntu server:
 bash scripts/check-403.sh mahirtech.cloud 3000
 ```
 
+Then apply the fix automatically:
+```bash
+sudo bash scripts/fix-403.sh mahirtech.cloud 3000
+```
+
 If it reports wrong vhost/default catch-all, apply the included config:
 ```bash
 sudo cp deploy/nginx/mahirtech.cloud.conf /etc/nginx/sites-available/mahirtech.cloud
@@ -151,3 +156,19 @@ Reload Nginx and check:
 curl -Ik https://mahirtech.cloud | rg -n "HTTP/|X-Debug-Server"
 ```
 This tells you which block is serving the response.
+
+## Why you see the plain `403 Forbidden (nginx/1.24.0 Ubuntu)` page
+That exact page typically means the request is being served by a static Nginx `root` server block instead of your Next.js reverse-proxy block. In practice, this is usually one of:
+
+- The default site (`/etc/nginx/sites-enabled/default`) is still active and catching traffic.
+- Domain/`server_name` mismatch, so Nginx picks another block.
+- HTTPS block exists but does not contain `proxy_pass http://127.0.0.1:3000;`.
+
+Use:
+```bash
+npm run check:403 -- mahirtech.cloud 3000
+```
+and then:
+```bash
+sudo npm run fix:403 -- mahirtech.cloud 3000
+```
