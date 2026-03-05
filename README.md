@@ -1,7 +1,5 @@
 # MahirTech Site
 
-Premium dark-theme, animation-rich lead generation portfolio for MahirTech.
-
 ## Tech Stack
 - Next.js 14 (App Router)
 - Tailwind CSS
